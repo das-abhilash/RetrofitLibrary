@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Retrofit Library</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_get">Get</string>
+    <string name="action_post">Post</string>
+    <string name="action_put">Put</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_post_with_file">Post Image</string>
+    <string name="action_nested_api_call">Nested API Call</string>
+    <string name="action_multiple_api_call">Multiple API Call</string>
+    <string name="action_retrofit_tag">Retrofit Tag</string>
+</resources>
