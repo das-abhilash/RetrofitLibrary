@@ -1,5 +1,6 @@
 package in.zollet.abhilash.retrofitlibrary;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -19,10 +20,14 @@ import java.util.Map;
 
 import in.zollet.abhilash.retrofitlibrary.Model.Response;
 import in.zollet.abhilash.retrofitlibrary.Model.ServerResponse;
+import in.zollet.abhilash.retrofitlibrary.Model.SeverNotifier;
 import in.zollet.abhilash.retrofitlibrary.Repos.RetrofitInterface;
+import in.zollet.abhilash.retrofitlibrary.Repos.SecondActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -85,18 +90,50 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_get) {
 
 
-            Observable<Response> responseObservable = getRetrofitClient().getUserDetails("9035548758", "123456");
+          /*  Observable<Response> responseObservable = getRetrofitClient().getUserDetails("9035548758", "123456");
             responseObservable.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
+
                     .map(Response::getMessage)
                     .subscribe(msg -> showStatus(msg),
                             error -> showStatus(error.toString())
-                    );
+                    );*/
+SeverNotifier server;
 
+            Call<Response> call = getRetrofitClient().getUserDetailsCall("908", "123456");
+            call.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                    if (response.isSuccessful()) {
+                        // use response data and do some fancy stuff :)
+
+                        /*if(response.body().getError() != 0){
+                            APIError error = ErrorUtils.parseError(response);
+                            String er = error.message();
+                            int eerr = 0;
+                        }*/
+                    } else {
+                        // parse the response body …
+                        /*APIError error = ErrorUtils.parseError(response);
+                        String er = error.message();
+                        int eerr = 0;*/
+                        // … and use it to show error information
+
+                        // … or just log the issue like we’re doing :)
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+                    int sdf = 0;
+                }
+            });
 /*this::showStatus*/
 
             return true;
         }
+
         if (id == R.id.action_post) {
             Map<String, String> data = new HashMap<>();
             data.put("roleName", "testing10");
@@ -118,13 +155,13 @@ public class MainActivity extends AppCompatActivity {
             RequestBody addressProofType = RequestBody.create(MediaType.parse("text/plain"), "aadhaarCard");
             RequestBody idProofType = RequestBody.create(MediaType.parse("text/plain"), "aadhaarCard");
             RequestBody token = RequestBody.create(MediaType.parse("text/plain"), "W0JAMjFlMzdlY2U");
-            Map<String, String> data = new HashMap<>();
-            data.put("addressProofType", "aadhaarCard");
-            data.put("idProofType","aadhaarCard");
-            data.put("token", "W0JAMjFlMzdlY2U");
+            Map<String, RequestBody> data = new HashMap<>();
+            data.put("addressProofType", addressProofType);
+            data.put("idProofType",idProofType);
+            data.put("token",token);
             Observable<ServerResponse> responseObservable = getRetrofitClient().postAddressProof("5606537e7a6f6c42560d0000", body,
-                   // data
-                    addressProofType, idProofType,token);
+                    data
+                    /*addressProofType, idProofType,token*/);
             responseObservable.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map(ServerResponse::getMessage)
@@ -158,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     .map(ServerResponse::getMessage)
                     .subscribe(this::showStatus,
                             error -> showStatus(error.toString()));
+            responseObservable.retry();
             return true;
         }
         if (id == R.id.action_multiple_api_call) {
@@ -207,19 +245,58 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_retrofit_tag) {
 
+            Intent i = new Intent(this, SecondActivity.class);
+            startActivity(i);
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public RetrofitInterface getRetrofitClient() {
-        Retrofit retrofit = new Retrofit.Builder()
+    public static RetrofitInterface getRetrofitClient() {
+
+        /*OkHttpClient client = new OkHttpClient();
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client.interceptors().add(interceptor);*/
+
+
+         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.1.10.241:9000/")
+                //.client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+       /* RestAdapter.Builder builder = new RestAdapter.Builder()
+                //.setEndpoint(API_LOCATION)
+                .setLogLevel(RestAdapter.LogLevel.FULL) // this is the important line
+                .setClient(new OkClient(new OkHttpClient()));*/
+        /*Call<ResponseBody> originalCall =
+                downloadService.downloadFileWithDynamicUrlSync(fileUrl);
+
+        Call<ResponseBody> newCall = originalCall.clone();
+        newCall.enqueue(downloadCallback);
+
+        originalCall.request();*/
+
         return retrofit.create(RetrofitInterface.class);
+    }
+
+    public static Retrofit getRetrofit(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.1.10.241:9000/") /*"http://10.1.10.241:9000/"*/
+                //.client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit;
+    }
+
+    private void call (SeverNotifier server){
+       /* Call<Response> call = getRetrofitClient().getUserDetailsCall();
+        call.enqueue(server);*/
     }
 }

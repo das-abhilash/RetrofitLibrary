@@ -11,7 +11,7 @@ public class Response {
     private Integer error;
     private String message;
     private Integer count;
-    private String api_element;
+    //private String api_element;
     private List<Result> result = null;
 
     public Integer getError() {
@@ -38,13 +38,13 @@ public class Response {
         this.count = count;
     }
 
-    public String getApiElement() {
+    /*public String getApiElement() {
         return api_element;
     }
 
     public void setApiElement(String api_element) {
         this.api_element = api_element;
-    }
+    }*/
 
     public List<Result> getResult() {
         return result;

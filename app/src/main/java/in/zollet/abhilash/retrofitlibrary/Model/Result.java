@@ -6,9 +6,29 @@ package in.zollet.abhilash.retrofitlibrary.Model;
 
 public class Result {
 
+
+    enum Kyc {APPROVED,REJECTED,VALID}
+     /*private enum Status {
+        ONE("APPROVED"),
+        TWO("APPROVED1"),
+        THREE("APPROVED2"),
+        FOUR("APPROVED3");
+        private String kycStatus;
+
+        Status(String  kycStatus) {
+            this.kycStatus = kycStatus;
+        }
+
+        public String getValue() {
+            return this.kycStatus;
+        }
+    }*/
+
+    private String xyz  = "abc";
+    // default value, primative type, enum, common error handling in rx java retrofit, multiple interface
     private Boolean onlineRentPaymentAvailable;
     private String role;
-    private String kycStatus;
+    private Kyc kycStatus;
     private String gender;
     private Integer mobileVerified;
     private String androidToken;
@@ -46,19 +66,19 @@ public class Result {
         this.onlineRentPaymentAvailable = onlineRentPaymentAvailable;
     }
 
-    public String getRole() {
+    public String  getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(String  role) {
         this.role = role;
     }
 
-    public String getKycStatus() {
+    public Kyc getKycStatus() {
         return kycStatus;
     }
 
-    public void setKycStatus(String kycStatus) {
+    public void setKycStatus(Kyc kycStatus) {
         this.kycStatus = kycStatus;
     }
 
